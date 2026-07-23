@@ -1,0 +1,184 @@
+/* ─── Google Fonts ────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+/* ─── Tailwind v4 Theme Tokens ────────────────────── */
+@theme {
+  /* Colors — from the design brief */
+  --color-ink: #0F1B1E;
+  --color-surface: #16262A;
+  --color-surface-raised: #1D3238;
+  --color-signal: #4FD1C5;
+  --color-signal-dim: rgba(79, 209, 197, 0.15);
+  --color-signal-glow: rgba(79, 209, 197, 0.3);
+  --color-flag: #E8927C;
+  --color-flag-dim: rgba(232, 146, 124, 0.15);
+  --color-text-primary: #F2EFE9;
+  --color-text-muted: #8B9A9D;
+  --color-hairline: #2A3E42;
+
+  /* System lane colors */
+  --color-sys-cardiovascular: #E8927C;
+  --color-sys-nervous: #A78BFA;
+  --color-sys-renal: #60A5FA;
+  --color-sys-hepatic: #FBBF24;
+  --color-sys-ocular: #34D399;
+  --color-sys-dermatological: #F472B6;
+  --color-sys-skeletal: #FB923C;
+  --color-sys-pulmonary: #38BDF8;
+  --color-sys-endocrine: #C084FC;
+  --color-sys-hematological: #F87171;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Animations */
+  --animate-lane-draw: lane-draw 0.6s ease-out forwards;
+  --animate-thread-draw: thread-draw 0.7s ease-out forwards;
+  --animate-card-enter: card-enter 0.4s ease-out forwards;
+  --animate-pulse-marker: pulse-marker 1.5s ease-in-out;
+  --animate-fade-in: fade-in 0.3s ease-out forwards;
+}
+
+/* ─── Keyframes ──────────────────────────────────── */
+@keyframes lane-draw {
+  from {
+    stroke-dashoffset: 1000;
+    opacity: 0.3;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes thread-draw {
+  from {
+    stroke-dashoffset: 500;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-marker {
+  0%, 100% {
+    r: 5;
+    opacity: 1;
+  }
+  50% {
+    r: 9;
+    opacity: 0.6;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ─── Reduced Motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Base Styles ────────────────────────────────── */
+html {
+  font-family: var(--font-body);
+  background-color: var(--color-ink);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Focus States ───────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Scrollbar ──────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ─── Utility Classes ────────────────────────────── */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-signal { color: var(--color-signal); }
+.text-flag { color: var(--color-flag); }
+.bg-signal-dim { background-color: var(--color-signal-dim); }
+.bg-flag-dim { background-color: var(--color-flag-dim); }
+
+/* SVG glow filter for threads */
+.thread-glow {
+  filter: drop-shadow(0 0 6px var(--color-signal-glow));
+}
+
+/* Card surface */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.card-raised {
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
