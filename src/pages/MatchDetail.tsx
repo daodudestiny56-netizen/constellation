@@ -4,7 +4,6 @@ import { ReasoningTrace } from '../components/ReasoningTrace';
 import { MonitoringPlan } from '../components/MonitoringPlan';
 import { PhenotypeRadar } from '../components/PhenotypeRadar';
 import { SafetyShield } from '../components/SafetyShield';
-import { QRCode } from '../components/QRCode';
 
 type Props = {
   matchIndex: number;
@@ -30,7 +29,6 @@ export function MatchDetail({ matchIndex, onNavigate }: Props) {
   }
 
   const { condition, score, matchedFindings } = result;
-  const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
 
   return (
     <div className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-4 sm:py-6 space-y-6 sm:space-y-8 pb-[env(safe-area-inset-bottom)]">
@@ -99,23 +97,6 @@ export function MatchDetail({ matchIndex, onNavigate }: Props) {
         />
       </section>
 
-      {/* QR Code & Actions */}
-      <section className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 card p-4 sm:p-6">
-        <div className="flex items-center justify-center p-2 bg-white rounded-xl">
-          <QRCode url={appUrl} size={120} />
-        </div>
-        <div className="space-y-2 text-center sm:text-left">
-          <p className="text-xs sm:text-sm text-text-muted">
-            Scan QR code to open Constellation on a mobile device
-          </p>
-          <button
-            onClick={() => onNavigate('live')}
-            className="min-h-[44px] px-4 py-2.5 rounded-xl bg-surface-raised border border-hairline text-xs sm:text-sm text-signal hover:bg-signal/10 transition-colors font-medium active:scale-95"
-          >
-            Watch for New Results Live →
-          </button>
-        </div>
-      </section>
     </div>
   );
 }

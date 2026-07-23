@@ -78,7 +78,9 @@ export function SafetyShield({ patientEvents }: Props) {
       <div className="flex items-center justify-between pb-3 border-b border-hairline">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-flag-dim text-flag flex items-center justify-center font-bold">
-            🛡️
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
           </div>
           <div>
             <h3 className="font-display font-semibold text-base text-text-primary">
@@ -216,7 +218,7 @@ export function SafetyShield({ patientEvents }: Props) {
           {hasRenalImpairment && nephrotoxicDrugs.length > 0 && (
             <div className="space-y-1">
               <p className="text-text-primary font-medium">
-                ⚠️ Renal Safety Alert:
+                Renal Safety Alert:
               </p>
               <p className="text-text-muted leading-relaxed">
                 Patient has active <strong className="text-text-primary">Renal System findings</strong> (kidney impairment / proteinuria). Use caution with nephrotoxic drug(s):{' '}
@@ -228,7 +230,7 @@ export function SafetyShield({ patientEvents }: Props) {
           {hasHepaticImpairment && hepatotoxicDrugs.length > 0 && (
             <div className="space-y-1 pt-1">
               <p className="text-text-primary font-medium">
-                ⚠️ Hepatic Safety Alert:
+                Hepatic Safety Alert:
               </p>
               <p className="text-text-muted leading-relaxed">
                 Patient has active <strong className="text-text-primary">Hepatic System findings</strong> (elevated liver enzymes / cirrhosis). Use caution with hepatotoxic drug(s):{' '}
