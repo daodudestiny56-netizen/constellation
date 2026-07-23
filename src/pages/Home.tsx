@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTwin } from '../context/TwinContext';
+import { useTwin, type SystemEvent } from '../context/TwinContext';
 import { SystemLanes } from '../components/SystemLanes';
 import { LogFindingModal } from '../components/LogFindingModal';
 import { DEMO_PATIENTS, type DemoPatient } from '../lib/ontomorph';
@@ -19,6 +19,11 @@ export function Home({ onNavigate }: Props) {
   const [customToken, setCustomToken] = useState('');
   const [showCustomToken, setShowCustomToken] = useState(false);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'system' | 'date'>('system');
+
+  const sortedEvents = [...events].sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
 
   const handleSelectPatient = async (patientId: string) => {
     await connect(patientId);
@@ -213,12 +218,33 @@ export function Home({ onNavigate }: Props) {
             </div>
           </div>
 
-          {/* System lanes or Empty state */}
-          {events.length > 0 ? (
-            <div className="card p-3 sm:p-5 overflow-hidden">
-              <SystemLanes eventsBySystem={eventsBySystem} />
+          {/* View Toggle (By System / By Date) */}
+          {events.length > 0 && (
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-surface-raised border border-hairline text-xs">
+                <button
+                  onClick={() => setViewMode('system')}
+                  className={`px-3 py-1.5 rounded-lg font-medium transition-colors min-h-[36px] ${
+                    viewMode === 'system' ? 'bg-signal text-ink shadow-sm' : 'text-text-muted hover:text-text-primary'
+                  }`}
+                >
+                  By System (Lanes)
+                </button>
+                <button
+                  onClick={() => setViewMode('date')}
+                  className={`px-3 py-1.5 rounded-lg font-medium transition-colors min-h-[36px] ${
+                    viewMode === 'date' ? 'bg-signal text-ink shadow-sm' : 'text-text-muted hover:text-text-primary'
+                  }`}
+                >
+                  By Date (Timeline)
+                </button>
+              </div>
+              <span className="text-xs text-text-muted font-mono">{events.length} observations</span>
             </div>
-          ) : (
+          )}
+
+          {/* System lanes or Empty state or Date Timeline */}
+          {events.length === 0 ? (
             <div className="card p-6 sm:p-8 text-center space-y-4 border border-dashed border-hairline/80 bg-surface/40">
               <div className="w-12 h-12 mx-auto rounded-2xl bg-signal/10 text-signal flex items-center justify-center">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -241,6 +267,42 @@ export function Home({ onNavigate }: Props) {
                 </svg>
                 Log First Finding
               </button>
+            </div>
+          ) : viewMode === 'system' ? (
+            <div className="card p-3 sm:p-5 overflow-hidden">
+              <SystemLanes eventsBySystem={eventsBySystem} />
+            </div>
+          ) : (
+            /* Reverse-chronological timeline list */
+            <div className="card p-4 sm:p-6 space-y-3">
+              <h3 className="font-display font-semibold text-sm text-text-primary mb-2">
+                Chronological Finding Log (Most Recent First)
+              </h3>
+              <div className="space-y-2.5">
+                {sortedEvents.map((evt: SystemEvent) => (
+                  <div
+                    key={evt.id}
+                    className="p-3.5 rounded-xl bg-surface-raised border border-hairline/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-signal/15 text-signal uppercase tracking-wider">
+                          {evt.system}
+                        </span>
+                        <span className="font-mono text-text-muted text-[11px]">
+                          {evt.timestamp ? new Date(evt.timestamp).toLocaleDateString() : 'Recent'}
+                        </span>
+                      </div>
+                      <p className="font-medium text-text-primary">{evt.data.display}</p>
+                    </div>
+                    {evt.data.code && (
+                      <span className="font-mono text-[10px] text-text-muted bg-surface px-2 py-1 rounded border border-hairline self-start sm:self-center">
+                        {evt.data.vocabulary || 'ICD-10'}: {evt.data.code}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

@@ -2,6 +2,8 @@ import { useTwin } from '../context/TwinContext';
 import { ScoreGauge } from '../components/ScoreGauge';
 import { ReasoningTrace } from '../components/ReasoningTrace';
 import { MonitoringPlan } from '../components/MonitoringPlan';
+import { PhenotypeRadar } from '../components/PhenotypeRadar';
+import { SafetyShield } from '../components/SafetyShield';
 import { QRCode } from '../components/QRCode';
 
 type Props = {
@@ -10,7 +12,7 @@ type Props = {
 };
 
 export function MatchDetail({ matchIndex, onNavigate }: Props) {
-  const { differentialResults, twin } = useTwin();
+  const { differentialResults, twin, events } = useTwin();
 
   const result = differentialResults[matchIndex];
 
@@ -68,6 +70,9 @@ export function MatchDetail({ matchIndex, onNavigate }: Props) {
         </div>
       </div>
 
+      {/* Phenotype Fingerprint Radar */}
+      <PhenotypeRadar result={result} />
+
       {/* Reasoning Trace */}
       <section>
         <h3 className="font-display text-base sm:text-lg font-semibold mb-3 flex items-center gap-2">
@@ -81,6 +86,9 @@ export function MatchDetail({ matchIndex, onNavigate }: Props) {
         </h3>
         <ReasoningTrace result={result} />
       </section>
+
+      {/* HOLON Safety Shield */}
+      <SafetyShield patientEvents={events} />
 
       {/* Monitoring Plan */}
       <section className="card p-4 sm:p-6">

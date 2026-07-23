@@ -12,6 +12,7 @@ type Props = {
     system?: string;
     hpoId?: string;
     hpoLabel?: string;
+    occurredAt?: string;
   }) => Promise<void>;
 };
 
@@ -19,6 +20,7 @@ export function LogFindingModal({ isOpen, onClose, onAddFinding }: Props) {
   const [query, setQuery] = useState('');
   const [selectedConcept, setSelectedConcept] = useState<ClinicalConcept | null>(null);
   const [overrideSystem, setOverrideSystem] = useState<BodySystem | ''>('');
+  const [onsetDate, setOnsetDate] = useState(new Date().toISOString().slice(0, 10));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [suggestions, setSuggestions] = useState<ClinicalConcept[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -83,6 +85,7 @@ export function LogFindingModal({ isOpen, onClose, onAddFinding }: Props) {
         system: determinedSystem,
         hpoId: selectedConcept?.hpoId,
         hpoLabel: selectedConcept?.hpoLabel,
+        occurredAt: onsetDate ? new Date(onsetDate).toISOString() : new Date().toISOString(),
       });
       onClose();
     } finally {
@@ -170,25 +173,36 @@ export function LogFindingModal({ isOpen, onClose, onAddFinding }: Props) {
               )}
             </div>
 
-            {/* Target Body System Lane */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-text-muted">
-                Assigned Body System Lane
-              </label>
-              <select
-                value={determinedSystem}
-                onChange={(e) => setOverrideSystem(e.target.value as BodySystem)}
-                className="w-full min-h-[44px] px-3 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-xs font-medium focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
-              >
-                {(Object.keys(BODY_SYSTEM_META) as BodySystem[]).map((sys) => (
-                  <option key={sys} value={sys}>
-                    {BODY_SYSTEM_META[sys].label} Lane
-                  </option>
-                ))}
-              </select>
-              <p className="text-[10px] text-text-muted">
-                Auto-assigned via HOLON clinical hierarchy.
-              </p>
+            {/* Target Body System Lane & Onset Date */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-text-muted">
+                  Assigned Body System Lane
+                </label>
+                <select
+                  value={determinedSystem}
+                  onChange={(e) => setOverrideSystem(e.target.value as BodySystem)}
+                  className="w-full min-h-[44px] px-3 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-xs font-medium focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+                >
+                  {(Object.keys(BODY_SYSTEM_META) as BodySystem[]).map((sys) => (
+                    <option key={sys} value={sys}>
+                      {BODY_SYSTEM_META[sys].label} Lane
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-text-muted">
+                  Symptom Onset Date
+                </label>
+                <input
+                  type="date"
+                  value={onsetDate}
+                  onChange={(e) => setOnsetDate(e.target.value)}
+                  className="w-full min-h-[44px] px-3 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary font-mono text-xs focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+                />
+              </div>
             </div>
 
             {/* Actions */}

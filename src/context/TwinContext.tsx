@@ -39,6 +39,7 @@ type TwinState = {
     system?: string;
     hpoId?: string;
     hpoLabel?: string;
+    occurredAt?: string;
   }) => Promise<void>;
   runConstellation: () => Promise<void>;
   startStream: () => void;
@@ -151,6 +152,7 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
       system?: string;
       hpoId?: string;
       hpoLabel?: string;
+      occurredAt?: string;
     }) => {
       let hpoMapping: PhenotypeMapping | null = null;
 
@@ -176,7 +178,7 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
 
       const newEvent: SystemEvent = {
         id: `evt-log-${Date.now()}`,
-        timestamp: new Date().toISOString(),
+        timestamp: finding.occurredAt || new Date().toISOString(),
         system: assignedSystem,
         data: {
           code: finding.code || 'CUSTOM',
@@ -185,6 +187,19 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
         },
         hpoMapping,
       };
+
+      if (twin) {
+        try {
+          await twin.flag(assignedSystem, {
+            occurredAt: newEvent.timestamp,
+            title: finding.display,
+            code: finding.code || 'CUSTOM',
+            vocabulary: finding.vocabulary || 'CLINICAL',
+          });
+        } catch (err) {
+          console.warn('[DTP Flag] Grant scope check:', err);
+        }
+      }
 
       setEvents((prev) => {
         const next = [newEvent, ...prev];
