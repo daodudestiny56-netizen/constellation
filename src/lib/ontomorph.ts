@@ -194,28 +194,8 @@ function normalizeHealthEvent(evt: HealthEvent): TwinEvent {
 // Used when no real API key is configured. Each patient has different events.
 
 const PATIENT_EVENTS: Record<string, TwinEvent[]> = {
-  'patient-fabry': [
-    { id: 'evt-f01', timestamp: '2026-03-15T10:30:00Z', system: 'cardiovascular', data: { code: 'I42.1', vocabulary: 'ICD-10', display: 'Obstructive hypertrophic cardiomyopathy' } },
-    { id: 'evt-f02', timestamp: '2026-04-02T14:15:00Z', system: 'cardiovascular', data: { code: '8867-4', vocabulary: 'LOINC', display: 'Heart rate', value: 92, unit: 'bpm' } },
-    { id: 'evt-f03', timestamp: '2026-02-20T09:00:00Z', system: 'renal', data: { code: 'N18.3', vocabulary: 'ICD-10', display: 'Chronic kidney disease, stage 3' } },
-    { id: 'evt-f04', timestamp: '2026-05-10T11:45:00Z', system: 'renal', data: { code: '2160-0', vocabulary: 'LOINC', display: 'Creatinine', value: 2.1, unit: 'mg/dL' } },
-    { id: 'evt-f05', timestamp: '2026-04-18T08:30:00Z', system: 'renal', data: { code: '5804-0', vocabulary: 'LOINC', display: 'Protein in Urine', value: 350, unit: 'mg/dL' } },
-    { id: 'evt-f06', timestamp: '2026-01-12T16:00:00Z', system: 'nervous', data: { code: 'G62.9', vocabulary: 'ICD-10', display: 'Burning pain in hands and feet' } },
-    { id: 'evt-f07', timestamp: '2026-03-28T13:20:00Z', system: 'nervous', data: { code: 'R25.1', vocabulary: 'ICD-10', display: 'Tremor' } },
-    { id: 'evt-f08', timestamp: '2026-02-05T10:00:00Z', system: 'dermatological', data: { code: 'L81.8', vocabulary: 'ICD-10', display: 'Dark red skin spots (angiokeratoma)' } },
-    { id: 'evt-f09', timestamp: '2026-04-25T15:30:00Z', system: 'ocular', data: { code: 'H18.49', vocabulary: 'ICD-10', display: 'Whorl-shaped corneal changes' } },
-    { id: 'evt-f10', timestamp: '2026-03-05T09:15:00Z', system: 'hepatic', data: { code: '1920-8', vocabulary: 'LOINC', display: 'Liver enzyme (AST)', value: 78, unit: 'U/L' } },
-  ],
-  'patient-wilson': [
-    { id: 'evt-w01', timestamp: '2026-01-10T09:00:00Z', system: 'hepatic', data: { code: 'K74.6', vocabulary: 'ICD-10', display: 'Liver scarring (early cirrhosis)' } },
-    { id: 'evt-w02', timestamp: '2026-01-10T09:15:00Z', system: 'hepatic', data: { code: '1920-8', vocabulary: 'LOINC', display: 'Liver enzyme (AST)', value: 112, unit: 'U/L' } },
-    { id: 'evt-w03', timestamp: '2026-02-05T11:00:00Z', system: 'hepatic', data: { code: '1742-6', vocabulary: 'LOINC', display: 'Liver enzyme (ALT)', value: 98, unit: 'U/L' } },
-    { id: 'evt-w04', timestamp: '2026-02-18T14:00:00Z', system: 'nervous', data: { code: 'R25.1', vocabulary: 'ICD-10', display: 'Hand tremor at rest' } },
-    { id: 'evt-w05', timestamp: '2026-03-01T10:30:00Z', system: 'nervous', data: { code: 'R27.0', vocabulary: 'ICD-10', display: 'Difficulty with coordination' } },
-    { id: 'evt-w06', timestamp: '2026-03-15T16:00:00Z', system: 'nervous', data: { code: 'F07.0', vocabulary: 'ICD-10', display: 'Personality and mood changes' } },
-    { id: 'evt-w07', timestamp: '2026-04-02T09:00:00Z', system: 'ocular', data: { code: 'H18.04', vocabulary: 'ICD-10', display: 'Greenish-brown rings around iris (Kayser-Fleischer)' } },
-    { id: 'evt-w08', timestamp: '2026-04-10T08:30:00Z', system: 'renal', data: { code: 'N25.89', vocabulary: 'ICD-10', display: 'Kidney tubule problems' } },
-  ],
+  'patient-fabry': [],
+  'patient-wilson': [],
   'patient-sarcoidosis': [
     { id: 'evt-s01', timestamp: '2026-01-20T10:00:00Z', system: 'pulmonary', data: { code: 'R06.0', vocabulary: 'ICD-10', display: 'Shortness of breath' } },
     { id: 'evt-s02', timestamp: '2026-01-20T10:15:00Z', system: 'pulmonary', data: { code: 'R05', vocabulary: 'ICD-10', display: 'Persistent dry cough' } },

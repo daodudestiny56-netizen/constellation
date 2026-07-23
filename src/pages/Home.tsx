@@ -213,21 +213,49 @@ export function Home({ onNavigate }: Props) {
             </div>
           </div>
 
-          {/* System lanes */}
-          <div className="card p-3 sm:p-5 overflow-hidden">
-            <SystemLanes eventsBySystem={eventsBySystem} />
-          </div>
+          {/* System lanes or Empty state */}
+          {events.length > 0 ? (
+            <div className="card p-3 sm:p-5 overflow-hidden">
+              <SystemLanes eventsBySystem={eventsBySystem} />
+            </div>
+          ) : (
+            <div className="card p-6 sm:p-8 text-center space-y-4 border border-dashed border-hairline/80 bg-surface/40">
+              <div className="w-12 h-12 mx-auto rounded-2xl bg-signal/10 text-signal flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </div>
+              <div className="max-w-md mx-auto space-y-1">
+                <h3 className="font-display font-semibold text-base text-text-primary">No clinical findings logged yet</h3>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  This patient twin starts clean. Log findings live across body systems using the HOLON search to build the clinical pattern.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsLogModalOpen(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all shadow-md shadow-signal/20 active:scale-95"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Log First Finding
+              </button>
+            </div>
+          )}
 
           {/* Event legend */}
-          <div className="flex flex-wrap gap-4 text-xs text-text-muted px-1">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-text-muted" />
-              Patient observation / finding
+          {events.length > 0 && (
+            <div className="flex flex-wrap gap-4 text-xs text-text-muted px-1">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-text-muted" />
+                Patient observation / finding
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Run Constellation CTA */}
-          <div className="flex justify-center pt-2 sm:pt-4">
+          <div className="flex flex-col items-center pt-2 sm:pt-4 space-y-2">
             <button
               onClick={handleRunConstellation}
               disabled={isAnalyzing || events.length === 0}
@@ -257,10 +285,16 @@ export function Home({ onNavigate }: Props) {
                 </span>
               )}
 
-              {!isAnalyzing && (
+              {!isAnalyzing && events.length > 0 && (
                 <span className="absolute inset-0 rounded-2xl border-2 border-signal/30 animate-ping opacity-20 pointer-events-none" />
               )}
             </button>
+
+            {events.length === 0 && (
+              <p className="text-center text-xs text-text-muted/60 font-mono">
+                Log at least one finding to run pattern matching
+              </p>
+            )}
           </div>
 
           {/* Mobile Floating Action Button (FAB) for + Log Finding */}
