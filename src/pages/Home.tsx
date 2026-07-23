@@ -37,13 +37,13 @@ export function Home({ onNavigate }: Props) {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col pb-[env(safe-area-inset-bottom)]">
       {!isConnected ? (
-        <div className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 py-8 space-y-8">
+        <div className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
           {/* Header & Branding */}
-          <div className="text-center space-y-3 max-w-xl mx-auto">
-            <div className="w-16 h-16 mx-auto rounded-2xl bg-signal/10 border border-signal/20 flex items-center justify-center">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-signal)" strokeWidth="1.5" strokeLinecap="round">
+          <div className="text-center space-y-2.5 max-w-xl mx-auto">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-signal/10 border border-signal/20 flex items-center justify-center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-signal)" strokeWidth="1.5" strokeLinecap="round">
                 <circle cx="12" cy="12" r="2" />
                 <circle cx="12" cy="4" r="1.5" />
                 <circle cx="4" cy="12" r="1.5" />
@@ -59,47 +59,47 @@ export function Home({ onNavigate }: Props) {
                 <line x1="12" y1="14" x2="12" y2="18" />
               </svg>
             </div>
-            <h2 className="font-display text-3xl font-bold tracking-tight">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
               Constellation
             </h2>
-            <p className="text-text-muted text-sm leading-relaxed">
+            <p className="text-text-muted text-xs sm:text-sm leading-relaxed">
               Cross-system clinical intelligence. Select a patient dashboard to uncover hidden patterns spanning separate body systems.
             </p>
           </div>
 
           {/* Demo Patient Dashboards */}
-          <div className="space-y-4">
+          <div className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h3 className="font-display font-semibold text-base text-text-primary">
+              <h3 className="font-display font-semibold text-sm sm:text-base text-text-primary">
                 Select Patient Dashboard
               </h3>
-              <span className="text-xs text-text-muted">4 Case Studies Available</span>
+              <span className="text-[11px] sm:text-xs text-text-muted">4 Case Studies</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
               {DEMO_PATIENTS.map((patient: DemoPatient) => (
                 <button
                   key={patient.id}
                   onClick={() => handleSelectPatient(patient.id)}
                   disabled={isConnecting}
-                  className="card text-left p-5 hover:bg-surface-raised transition-all cursor-pointer border border-hairline hover:border-signal/50 group flex flex-col justify-between"
+                  className="card text-left p-4 sm:p-5 hover:bg-surface-raised transition-all cursor-pointer border border-hairline hover:border-signal/50 group flex flex-col justify-between active:scale-[0.99]"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between">
+                  <div className="space-y-2.5">
+                    <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h4 className="font-display font-semibold text-lg text-text-primary group-hover:text-signal transition-colors">
+                        <h4 className="font-display font-semibold text-base sm:text-lg text-text-primary group-hover:text-signal transition-colors">
                           {patient.name}
                         </h4>
-                        <p className="text-xs text-text-muted font-mono">
+                        <p className="text-xs text-text-muted font-mono mt-0.5">
                           {patient.age}y / {patient.sex} • ID: {patient.id}
                         </p>
                       </div>
-                      <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-signal-dim text-signal border border-signal/20">
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-signal-dim text-signal border border-signal/20 flex-shrink-0">
                         {patient.expectedTopMatch}
                       </span>
                     </div>
 
-                    <p className="text-sm text-text-muted line-clamp-2">
+                    <p className="text-xs sm:text-sm text-text-muted line-clamp-2 leading-relaxed">
                       {patient.summary}
                     </p>
 
@@ -107,7 +107,7 @@ export function Home({ onNavigate }: Props) {
                       {patient.primarySystems.map((sys) => (
                         <span
                           key={sys}
-                          className="px-2 py-0.5 rounded text-xs bg-surface-raised text-text-muted border border-hairline/50"
+                          className="px-2 py-0.5 rounded text-[11px] bg-surface-raised text-text-muted border border-hairline/50"
                         >
                           {sys}
                         </span>
@@ -115,7 +115,7 @@ export function Home({ onNavigate }: Props) {
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-hairline/50 flex items-center justify-between text-xs text-signal font-medium group-hover:translate-x-1 transition-transform">
+                  <div className="mt-3.5 pt-2.5 border-t border-hairline/50 flex items-center justify-between text-xs text-signal font-medium group-hover:translate-x-0.5 transition-transform min-h-[44px]">
                     <span>Open Patient Twin Dashboard</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M5 12h14M12 5l7 7-7 7" />
@@ -127,10 +127,10 @@ export function Home({ onNavigate }: Props) {
           </div>
 
           {/* Custom DTP Grant Token Section */}
-          <div className="pt-4 border-t border-hairline space-y-4">
+          <div className="pt-3 border-t border-hairline space-y-3">
             <button
               onClick={() => setShowCustomToken(!showCustomToken)}
-              className="flex items-center gap-2 text-xs text-text-muted hover:text-signal transition-colors mx-auto"
+              className="min-h-[44px] flex items-center justify-center gap-2 text-xs text-text-muted hover:text-signal transition-colors mx-auto px-4"
             >
               <span>{showCustomToken ? '▲ Hide Live Grant Token Login' : '▼ Connect with Custom DTP Grant Token'}</span>
             </button>
@@ -146,7 +146,7 @@ export function Home({ onNavigate }: Props) {
                   value={customToken}
                   onChange={(e) => setCustomToken(e.target.value)}
                   placeholder="Paste JWT grant token from DTP..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-surface border border-hairline text-text-primary font-mono text-xs placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+                  className="w-full min-h-[44px] px-4 py-2.5 rounded-xl bg-surface border border-hairline text-text-primary font-mono text-xs placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
                 />
 
                 {connectionError && (
@@ -158,7 +158,7 @@ export function Home({ onNavigate }: Props) {
                 <button
                   type="submit"
                   disabled={isConnecting || !customToken.trim()}
-                  className="w-full py-2.5 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  className="w-full min-h-[44px] py-2.5 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                   {isConnecting ? 'Connecting to DTP SDK...' : 'Connect Live Twin'}
                 </button>
@@ -168,16 +168,16 @@ export function Home({ onNavigate }: Props) {
         </div>
       ) : (
         /* Connected — Lane View & Patient Dashboard */
-        <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6">
+        <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
           {/* Patient Info Header */}
-          <div className="card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-signal/10 border border-signal/20 flex items-center justify-center text-signal font-display font-bold text-lg">
+          <div className="card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-signal/10 border border-signal/20 flex items-center justify-center text-signal font-display font-bold text-base sm:text-lg flex-shrink-0">
                 {twin?.name ? twin.name.charAt(0) : 'P'}
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="font-display text-xl font-bold text-text-primary">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-text-primary truncate">
                     {twin?.name || 'Connected Patient'}
                   </h2>
                   {twin?.age ? (
@@ -186,17 +186,16 @@ export function Home({ onNavigate }: Props) {
                     </span>
                   ) : null}
                 </div>
-                <p className="text-xs text-text-muted mt-0.5">
-                  ID: <span className="font-mono text-text-primary">{twin?.id}</span> • {events.length} findings across {Object.keys(eventsBySystem).length} body systems
+                <p className="text-xs text-text-muted mt-0.5 truncate">
+                  ID: <span className="font-mono text-text-primary">{twin?.id}</span> • {events.length} findings across {Object.keys(eventsBySystem).length} systems
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* + Log a Finding Button */}
+            <div className="flex items-center justify-between sm:justify-end gap-2.5 pt-2 sm:pt-0 border-t sm:border-t-0 border-hairline/40">
               <button
                 onClick={() => setIsLogModalOpen(true)}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all shadow-md shadow-signal/20"
+                className="hidden sm:flex items-center gap-1.5 min-h-[44px] px-4 py-2 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all shadow-md shadow-signal/20 active:scale-95"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <line x1="12" y1="5" x2="12" y2="19" />
@@ -207,7 +206,7 @@ export function Home({ onNavigate }: Props) {
 
               <button
                 onClick={reset}
-                className="px-3 py-1.5 rounded-lg bg-surface-raised border border-hairline text-text-muted text-xs hover:text-text-primary hover:border-signal/50 transition-colors"
+                className="min-h-[44px] px-3.5 py-2 rounded-xl bg-surface-raised border border-hairline text-text-muted text-xs hover:text-text-primary hover:border-signal/50 transition-colors active:scale-95"
               >
                 Switch Patient
               </button>
@@ -215,7 +214,7 @@ export function Home({ onNavigate }: Props) {
           </div>
 
           {/* System lanes */}
-          <div className="card overflow-hidden">
+          <div className="card p-3 sm:p-5 overflow-hidden">
             <SystemLanes eventsBySystem={eventsBySystem} />
           </div>
 
@@ -228,30 +227,30 @@ export function Home({ onNavigate }: Props) {
           </div>
 
           {/* Run Constellation CTA */}
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center pt-2 sm:pt-4">
             <button
               onClick={handleRunConstellation}
               disabled={isAnalyzing || events.length === 0}
-              className="group relative px-8 py-4 rounded-2xl bg-signal text-ink font-display font-bold text-lg hover:bg-signal/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-signal/20 hover:shadow-signal/30"
+              className="w-full sm:w-auto group relative px-6 sm:px-8 min-h-[52px] py-3.5 rounded-2xl bg-signal text-ink font-display font-bold text-base sm:text-lg hover:bg-signal/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-signal/20 hover:shadow-signal/30 active:scale-95 flex items-center justify-center"
             >
               {isAnalyzing ? (
-                <span className="flex items-center gap-3">
+                <span className="flex items-center gap-2.5">
                   <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                   </svg>
-                  Looking for patterns across all systems...
+                  Analyzing patterns...
                 </span>
               ) : (
-                <span className="flex items-center gap-3">
+                <span className="flex items-center gap-2.5">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <circle cx="12" cy="12" r="2" />
                     <circle cx="12" cy="5" r="1.5" />
                     <circle cx="5" cy="12" r="1.5" />
                     <circle cx="19" cy="12" r="1.5" />
-                    <circle cx="12" cy="20" r="1.5" />
+                    <circle cx="12" cy="19" r="1.5" />
                     <line x1="12" y1="6" x2="12" y2="10" />
-                    <line x1="6" y1="12" x2="10" y2="12" />
-                    <line x1="14" y1="12" x2="18" y2="12" />
+                    <line x1="7" y1="12" x2="10" y2="12" />
+                    <line x1="14" y1="12" x2="17" y2="12" />
                     <line x1="12" y1="14" x2="12" y2="18" />
                   </svg>
                   Find What's Connected
@@ -263,6 +262,18 @@ export function Home({ onNavigate }: Props) {
               )}
             </button>
           </div>
+
+          {/* Mobile Floating Action Button (FAB) for + Log Finding */}
+          <button
+            onClick={() => setIsLogModalOpen(true)}
+            className="sm:hidden fixed bottom-6 right-4 z-40 w-14 h-14 rounded-full bg-signal text-ink shadow-2xl shadow-signal/40 flex items-center justify-center active:scale-95 border-2 border-ink"
+            aria-label="Log clinical finding"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </button>
         </div>
       )}
 

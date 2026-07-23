@@ -54,13 +54,13 @@ export function MonitoringPlan({ condition, patientAge = 38, patientSex = 'male'
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <h4 className="font-display font-semibold text-sm text-text-primary">
           Recommended Tests to Confirm
         </h4>
         <button
           onClick={handleWhatsAppShare}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-signal-dim text-signal text-xs font-medium hover:bg-signal/20 transition-colors"
+          className="min-h-[44px] px-3.5 flex items-center gap-1.5 rounded-xl bg-signal-dim text-signal text-xs font-medium hover:bg-signal/20 transition-colors active:scale-95 flex-shrink-0"
           aria-label="Share monitoring plan via WhatsApp"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -71,8 +71,40 @@ export function MonitoringPlan({ condition, patientAge = 38, patientSex = 'male'
         </button>
       </div>
 
-      {/* Monitoring signals table */}
-      <div className="overflow-x-auto">
+      {/* Mobile Stacked Card View (<=640px) */}
+      <div className="block sm:hidden space-y-2">
+        {condition.monitoringSignals.map((signal) => {
+          const range = ranges[signal.loincCode];
+          return (
+            <div
+              key={`mob-${signal.loincCode}`}
+              className="p-3 rounded-xl bg-surface border border-hairline space-y-1 text-xs"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-text-primary">{signal.label}</span>
+                <span className="font-mono text-[10px] text-signal bg-signal-dim/30 px-2 py-0.5 rounded">
+                  {signal.loincCode}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-text-muted pt-1 border-t border-hairline/30">
+                <span>Normal Range:</span>
+                {loading ? (
+                  <span className="animate-pulse">Loading...</span>
+                ) : range ? (
+                  <span className="font-mono text-text-primary font-medium">
+                    {range.low}–{range.high} {range.unit}
+                  </span>
+                ) : (
+                  <span className="font-mono">{signal.unit}</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop Table (>640px) */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-hairline">

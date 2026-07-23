@@ -5,7 +5,6 @@ export function PWAInstallBanner() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Check if already dismissed
     if (localStorage.getItem('constellation-pwa-dismissed')) {
       setDismissed(true);
       return;
@@ -38,12 +37,12 @@ export function PWAInstallBanner() {
 
   return (
     <div
-      className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-50 card flex items-center gap-3 shadow-lg shadow-ink/50"
+      className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-40 card flex items-center gap-3 shadow-xl border border-hairline bg-surface/95 backdrop-blur-md"
       style={{ animation: 'card-enter 0.3s ease-out' }}
       role="banner"
     >
-      <div className="w-10 h-10 rounded-lg bg-signal/20 flex items-center justify-center flex-shrink-0">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-signal)" strokeWidth="2" strokeLinecap="round">
+      <div className="w-9 h-9 rounded-lg bg-signal/20 flex items-center justify-center flex-shrink-0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-signal)" strokeWidth="2" strokeLinecap="round">
           <circle cx="12" cy="12" r="2" />
           <circle cx="12" cy="5" r="1.5" />
           <circle cx="5" cy="12" r="1.5" />
@@ -52,25 +51,25 @@ export function PWAInstallBanner() {
           <line x1="12" y1="7" x2="12" y2="10" />
           <line x1="7" y1="12" x2="10" y2="12" />
           <line x1="14" y1="12" x2="17" y2="12" />
-          <line x1="12" y1="14" x2="12" y2="17" />
+          <line x1="12" y1="14" x2="12" y2="18" />
         </svg>
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-text-primary">Install Constellation</p>
-        <p className="text-xs text-text-muted">Add to your home screen for quick access</p>
+        <p className="text-xs font-semibold text-text-primary">Install Constellation</p>
+        <p className="text-[10px] text-text-muted">Add to home screen</p>
       </div>
 
-      <div className="flex gap-1 flex-shrink-0">
+      <div className="flex items-center gap-1 flex-shrink-0">
         <button
           onClick={handleInstall}
-          className="px-3 py-1.5 rounded-lg bg-signal text-ink text-xs font-semibold hover:bg-signal/90 transition-colors"
+          className="min-h-[44px] px-3.5 rounded-lg bg-signal text-ink text-xs font-semibold hover:bg-signal/90 transition-colors"
         >
           Install
         </button>
         <button
           onClick={handleDismiss}
-          className="p-1.5 text-text-muted hover:text-text-primary transition-colors"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
           aria-label="Dismiss install prompt"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

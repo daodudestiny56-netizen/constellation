@@ -29,7 +29,7 @@ export function ThreadAnimation({ matchedFindings, markerPositions, targetY, tar
 
   return (
     <svg
-      className="absolute inset-0 w-full h-full pointer-events-none"
+      className="hidden sm:block absolute inset-0 w-full h-full pointer-events-none"
       style={{ zIndex: 10 }}
       aria-hidden="true"
     >
