@@ -69,65 +69,65 @@ export function LandingPage({ onNavigate }: Props) {
         </div>
 
         {/* Animated Visual Diagram Feature */}
-        <div className="mt-12 sm:mt-16 w-full max-w-4xl card p-4 sm:p-8 border border-hairline/80 relative overflow-hidden bg-surface/80 backdrop-blur-md shadow-2xl">
-          <div className="flex items-center justify-between pb-4 border-b border-hairline text-xs font-mono text-text-muted">
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-signal" />
-              DIGITAL TWIN ANATOMICAL SYSTEM NETWORK
+        <div className="mt-10 sm:mt-16 w-full max-w-4xl card p-3.5 sm:p-8 border border-hairline/80 relative overflow-hidden bg-surface/80 backdrop-blur-md shadow-2xl">
+          <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-hairline text-[11px] sm:text-xs font-mono text-text-muted">
+            <span className="flex items-center gap-2 truncate">
+              <span className="w-2 h-2 rounded-full bg-signal flex-shrink-0" />
+              <span className="truncate">ANATOMICAL SYSTEM NETWORK</span>
             </span>
-            <span className="text-signal">10 SYSTEMS CONNECTED</span>
+            <span className="text-signal flex-shrink-0 font-semibold">10 SYSTEMS</span>
           </div>
 
-          <div className="py-6 sm:py-10 grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div className="py-4 sm:py-8 grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
             {Object.entries(BODY_SYSTEM_META).map(([key, meta]) => (
               <div
                 key={key}
-                className="p-3 rounded-xl bg-surface-raised/60 border border-hairline/40 flex flex-col items-center text-center space-y-1.5 hover:border-signal/40 transition-colors"
+                className="p-2 sm:p-3 rounded-xl bg-surface-raised/60 border border-hairline/40 flex flex-col items-center text-center space-y-1 hover:border-signal/40 transition-colors min-h-[64px] justify-center"
               >
                 <span
-                  className="w-3 h-3 rounded-full shadow-sm"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shadow-sm flex-shrink-0"
                   style={{ backgroundColor: meta.color }}
                 />
-                <span className="font-display font-semibold text-xs text-text-primary">{meta.label}</span>
-                <span className="text-[10px] text-text-muted font-mono">HOLON Linked</span>
+                <span className="font-display font-semibold text-[11px] sm:text-xs text-text-primary leading-tight">{meta.label}</span>
+                <span className="text-[9px] sm:text-[10px] text-text-muted font-mono">HOLON Linked</span>
               </div>
             ))}
           </div>
 
-          <p className="text-xs text-text-muted text-center pt-2 border-t border-hairline/30">
+          <p className="text-[11px] sm:text-xs text-text-muted text-center pt-2 border-t border-hairline/30 leading-relaxed">
             Simultaneously evaluates observations across Cardiovascular, Renal, Nervous, Hepatic, Ocular, Dermatological, Skeletal, Pulmonary, Endocrine & Hematological lanes.
           </p>
         </div>
       </section>
 
       {/* ─── METRICS BANNER ─── */}
-      <section className="border-y border-hairline bg-surface/50 py-10 sm:py-14 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
+      <section className="border-y border-hairline bg-surface/50 py-8 sm:py-14 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 text-center">
           <div className="space-y-1">
-            <p className="font-display text-3xl sm:text-4xl font-extrabold text-signal">5–7 Years</p>
-            <p className="text-xs sm:text-sm text-text-muted">Average Rare Disease Diagnostic Delay</p>
+            <p className="font-display text-2xl sm:text-4xl font-extrabold text-signal">5–7 Years</p>
+            <p className="text-[11px] sm:text-sm text-text-muted">Average Diagnostic Delay</p>
           </div>
 
           <div className="space-y-1">
-            <p className="font-display text-3xl sm:text-4xl font-extrabold text-text-primary">7+ Clinics</p>
-            <p className="text-xs sm:text-sm text-text-muted">Specialty Silos Per Patient</p>
+            <p className="font-display text-2xl sm:text-4xl font-extrabold text-text-primary">7+ Clinics</p>
+            <p className="text-[11px] sm:text-sm text-text-muted">Specialty Silos Per Patient</p>
           </div>
 
           <div className="space-y-1">
-            <p className="font-display text-3xl sm:text-4xl font-extrabold text-signal">10 Systems</p>
-            <p className="text-xs sm:text-sm text-text-muted">Unified Cross-System Engine</p>
+            <p className="font-display text-2xl sm:text-4xl font-extrabold text-signal">10 Systems</p>
+            <p className="text-[11px] sm:text-sm text-text-muted">Unified Cross-System Engine</p>
           </div>
 
           <div className="space-y-1">
-            <p className="font-display text-3xl sm:text-4xl font-extrabold text-text-primary">100%</p>
-            <p className="text-xs sm:text-sm text-text-muted">Explainable Reasoning Audit Trail</p>
+            <p className="font-display text-2xl sm:text-4xl font-extrabold text-text-primary">100%</p>
+            <p className="text-[11px] sm:text-sm text-text-muted">Explainable Audit Trail</p>
           </div>
         </div>
       </section>
 
       {/* ─── THE SILO PROBLEM VS CONSTELLATION ─── */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto w-full space-y-12">
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
+      <section className="py-12 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto w-full space-y-8 sm:space-y-12">
+        <div className="text-center space-y-2.5 max-w-2xl mx-auto">
           <h2 className="font-display text-2xl sm:text-4xl font-bold tracking-tight">
             Why Multi-System Diseases Are Missed
           </h2>
@@ -137,11 +137,11 @@ export function LandingPage({ onNavigate }: Props) {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex justify-center">
-          <div className="p-1 rounded-xl bg-surface-raised border border-hairline flex gap-1 text-xs">
+        <div className="flex justify-center w-full">
+          <div className="p-1 rounded-xl bg-surface-raised border border-hairline flex flex-col sm:flex-row gap-1 text-xs w-full sm:w-auto">
             <button
               onClick={() => setActiveTab('problem')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-4 py-2.5 rounded-lg font-medium transition-colors min-h-[40px] text-center cursor-pointer ${
                 activeTab === 'problem' ? 'bg-flag text-white shadow-md' : 'text-text-muted hover:text-text-primary'
               }`}
             >
@@ -149,7 +149,7 @@ export function LandingPage({ onNavigate }: Props) {
             </button>
             <button
               onClick={() => setActiveTab('solution')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-4 py-2.5 rounded-lg font-medium transition-colors min-h-[40px] text-center cursor-pointer ${
                 activeTab === 'solution' ? 'bg-signal text-ink shadow-md font-semibold' : 'text-text-muted hover:text-text-primary'
               }`}
             >
@@ -157,7 +157,7 @@ export function LandingPage({ onNavigate }: Props) {
             </button>
             <button
               onClick={() => setActiveTab('tech')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-4 py-2.5 rounded-lg font-medium transition-colors min-h-[40px] text-center cursor-pointer ${
                 activeTab === 'tech' ? 'bg-surface text-text-primary border border-hairline' : 'text-text-muted hover:text-text-primary'
               }`}
             >

@@ -44,7 +44,7 @@ function App() {
   return (
     <TwinProvider>
       <div className="min-h-dvh flex flex-col bg-ink">
-        <Header onNavigate={navigate} />
+        <Header onNavigate={navigate} currentPage={route.page} />
         <main className="flex-1 flex flex-col">
           {route.page === 'landing' && <LandingPage onNavigate={navigate} />}
           {route.page === 'home' && <Home onNavigate={navigate} />}
