@@ -1,12 +1,9 @@
 /**
- * Constellation SDK Layer
+ * SDK wrapper for @ontomorph/dtp-sdk.
  *
- * This module wraps the real @ontomorph/dtp-sdk and normalizes its data shapes
- * for the rest of the app. It also provides fallback data for demo mode
- * when no real API key or grant token is available.
- *
- * ARCHITECTURE: The rest of the app imports only from this file — never from
- * @ontomorph/dtp-sdk directly.
+ * Normalizes data shapes for the app and provides fallback demo data
+ * when no real API key is available. The rest of the codebase should
+ * import from here, not directly from @ontomorph/dtp-sdk.
  */
 
 import { DTP as RealDTP } from '@ontomorph/dtp-sdk';
@@ -54,8 +51,6 @@ export type PhenotypeMatchResponse = {
   normalizedScore: number;
   bestMatches: PhenotypeMatch[];
 };
-
-// ─── App-Level Types ───────────────────────────────────
 
 export type TwinEvent = {
   id: string;
@@ -123,36 +118,45 @@ export type DrugConcept = {
   cardiotoxic?: boolean;
 };
 
-// ─── Concept Databases ─────────────────────────────────
-
+// Clinical concepts that can be logged as findings.
+// Each one maps to a specific ICD-10 or LOINC code + HPO phenotype.
 export const CLINICAL_CONCEPTS_DATABASE: ClinicalConcept[] = [
+  // cardiovascular
   { conceptCode: 'I42.1', conceptName: 'Obstructive hypertrophic cardiomyopathy', vocabularyId: 'ICD-10', hpoId: 'HP:0001714', hpoLabel: 'Left ventricular hypertrophy', system: 'cardiovascular', conceptId: 101 },
   { conceptCode: 'I71.2', conceptName: 'Aortic root dilatation / Aortic aneurysm', vocabularyId: 'ICD-10', hpoId: 'HP:0002616', hpoLabel: 'Aortic root dilatation', system: 'cardiovascular', conceptId: 102 },
   { conceptCode: 'I34.1', conceptName: 'Mitral valve prolapse', vocabularyId: 'ICD-10', hpoId: 'HP:0001634', hpoLabel: 'Mitral valve prolapse', system: 'cardiovascular', conceptId: 103 },
   { conceptCode: '30934-4', conceptName: 'BNP (B-type Natriuretic Peptide)', vocabularyId: 'LOINC', hpoId: 'HP:0030843', hpoLabel: 'Cardiac amyloidosis signal', system: 'cardiovascular', conceptId: 104 },
+  // renal
   { conceptCode: 'N18.3', conceptName: 'Chronic kidney disease, stage 3', vocabularyId: 'ICD-10', hpoId: 'HP:0000083', hpoLabel: 'Renal insufficiency', system: 'renal', conceptId: 201 },
   { conceptCode: '5804-0', conceptName: 'Proteinuria (Protein in Urine)', vocabularyId: 'LOINC', hpoId: 'HP:0000093', hpoLabel: 'Proteinuria', system: 'renal', conceptId: 202 },
   { conceptCode: '2160-0', conceptName: 'Serum Creatinine (Elevated)', vocabularyId: 'LOINC', hpoId: 'HP:0000083', hpoLabel: 'Renal insufficiency', system: 'renal', conceptId: 203 },
+  // nervous
   { conceptCode: 'G62.9', conceptName: 'Acroparesthesia / Peripheral neuropathy (Burning pain)', vocabularyId: 'ICD-10', hpoId: 'HP:0002498', hpoLabel: 'Acroparesthesia', system: 'nervous', conceptId: 301 },
   { conceptCode: 'R25.1', conceptName: 'Hand Tremor / Resting tremor', vocabularyId: 'ICD-10', hpoId: 'HP:0001337', hpoLabel: 'Tremor', system: 'nervous', conceptId: 302 },
   { conceptCode: 'R27.0', conceptName: 'Ataxia / Difficulty with coordination', vocabularyId: 'ICD-10', hpoId: 'HP:0001260', hpoLabel: 'Dysarthria', system: 'nervous', conceptId: 303 },
   { conceptCode: 'F07.0', conceptName: 'Personality and mood changes', vocabularyId: 'ICD-10', hpoId: 'HP:0000718', hpoLabel: 'Personality changes', system: 'nervous', conceptId: 304 },
+  // dermatological
   { conceptCode: 'L81.8', conceptName: 'Angiokeratoma (Dark red skin spots)', vocabularyId: 'ICD-10', hpoId: 'HP:0001019', hpoLabel: 'Angiokeratoma', system: 'dermatological', conceptId: 401 },
   { conceptCode: 'L52', conceptName: 'Erythema nodosum (Painful red bumps on shins)', vocabularyId: 'ICD-10', hpoId: 'HP:0001045', hpoLabel: 'Erythema nodosum', system: 'dermatological', conceptId: 402 },
+  // ocular
   { conceptCode: 'H18.49', conceptName: 'Cornea verticillata (Whorl-shaped corneal opacity)', vocabularyId: 'ICD-10', hpoId: 'HP:0000629', hpoLabel: 'Cornea verticillata', system: 'ocular', conceptId: 501 },
   { conceptCode: 'H18.04', conceptName: 'Kayser-Fleischer rings (Greenish-brown iris ring)', vocabularyId: 'ICD-10', hpoId: 'HP:0002172', hpoLabel: 'Kayser-Fleischer ring', system: 'ocular', conceptId: 502 },
   { conceptCode: 'H20.9', conceptName: 'Uveitis / Eye inflammation', vocabularyId: 'ICD-10', hpoId: 'HP:0000554', hpoLabel: 'Uveitis', system: 'ocular', conceptId: 503 },
   { conceptCode: 'H27.10', conceptName: 'Ectopia lentis (Displaced eye lens)', vocabularyId: 'ICD-10', hpoId: 'HP:0001083', hpoLabel: 'Ectopia lentis', system: 'ocular', conceptId: 504 },
+  // hepatic
   { conceptCode: 'K74.6', conceptName: 'Liver cirrhosis / Liver fibrosis', vocabularyId: 'ICD-10', hpoId: 'HP:0001394', hpoLabel: 'Liver cirrhosis', system: 'hepatic', conceptId: 601 },
   { conceptCode: '1920-8', conceptName: 'AST / SGOT (Elevated liver enzyme)', vocabularyId: 'LOINC', hpoId: 'HP:0002240', hpoLabel: 'Hepatomegaly', system: 'hepatic', conceptId: 602 },
   { conceptCode: 'R16.0', conceptName: 'Hepatomegaly (Enlarged liver)', vocabularyId: 'ICD-10', hpoId: 'HP:0002240', hpoLabel: 'Hepatomegaly', system: 'hepatic', conceptId: 603 },
+  // pulmonary
   { conceptCode: 'R06.0', conceptName: 'Dyspnea / Shortness of breath', vocabularyId: 'ICD-10', hpoId: 'HP:0002094', hpoLabel: 'Dyspnea', system: 'pulmonary', conceptId: 701 },
   { conceptCode: 'R05', conceptName: 'Persistent dry cough', vocabularyId: 'ICD-10', hpoId: 'HP:0012735', hpoLabel: 'Cough', system: 'pulmonary', conceptId: 702 },
   { conceptCode: 'D86.0', conceptName: 'Bilateral hilar lymphadenopathy', vocabularyId: 'ICD-10', hpoId: 'HP:0002206', hpoLabel: 'Pulmonary fibrosis', system: 'pulmonary', conceptId: 703 },
   { conceptCode: 'J93.11', conceptName: 'Spontaneous pneumothorax (Collapsed lung)', vocabularyId: 'ICD-10', hpoId: 'HP:0002107', hpoLabel: 'Pneumothorax', system: 'pulmonary', conceptId: 704 },
+  // skeletal
   { conceptCode: 'Q67.5', conceptName: 'Pectus excavatum (Sunken chest)', vocabularyId: 'ICD-10', hpoId: 'HP:0000767', hpoLabel: 'Pectus excavatum', system: 'skeletal', conceptId: 801 },
   { conceptCode: 'M41.9', conceptName: 'Scoliosis (Curved spine)', vocabularyId: 'ICD-10', hpoId: 'HP:0002650', hpoLabel: 'Scoliosis', system: 'skeletal', conceptId: 802 },
   { conceptCode: 'M13.89', conceptName: 'Arthropathy / Joint pain', vocabularyId: 'ICD-10', hpoId: 'HP:0001369', hpoLabel: 'Arthropathy', system: 'skeletal', conceptId: 803 },
+  // endocrine
   { conceptCode: '17861-6', conceptName: 'Serum Calcium (Hypercalcemia)', vocabularyId: 'LOINC', hpoId: 'HP:0003072', hpoLabel: 'Hypercalcemia', system: 'endocrine', conceptId: 901 },
   { conceptCode: 'E11.9', conceptName: 'Type 2 Diabetes Mellitus', vocabularyId: 'ICD-10', hpoId: 'HP:0000819', hpoLabel: 'Diabetes mellitus', system: 'endocrine', conceptId: 902 },
 ];
@@ -170,7 +174,7 @@ export const DRUG_CONCEPTS_DATABASE: DrugConcept[] = [
   { conceptId: 1010, conceptName: 'Penicillamine', drugClass: 'Chelating Agent', nephrotoxic: true },
 ];
 
-// ─── Demo Patient Profiles ─────────────────────────────
+// Demo patient profiles for the hackathon presentation flow
 
 export type DemoPatient = {
   id: string;
@@ -203,7 +207,7 @@ export const DEMO_PATIENTS: DemoPatient[] = [
   },
   {
     id: 'patient-sarcoidosis',
-    name: 'David Müller',
+    name: 'David Mueller',
     age: 45,
     sex: 'male',
     summary: 'Breathing issues, eye inflammation, and skin lesions',
@@ -221,8 +225,6 @@ export const DEMO_PATIENTS: DemoPatient[] = [
   },
 ];
 
-// ─── Helpers ───────────────────────────────────────────
-
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
 }
@@ -230,8 +232,13 @@ function sleep(ms: number): Promise<void> {
 function hasRealCredentials(): boolean {
   const dtpKey = import.meta.env.VITE_DTP_KEY || '';
   const holonKey = import.meta.env.VITE_HOLON_KEY || '';
-  const isRealDtp = (dtpKey.startsWith('dtp_live_') || dtpKey.startsWith('dtp_test_')) && !dtpKey.includes('demo_key') && !dtpKey.includes('your_');
+
+  const isRealDtp =
+    (dtpKey.startsWith('dtp_live_') || dtpKey.startsWith('dtp_test_')) &&
+    !dtpKey.includes('demo_key') &&
+    !dtpKey.includes('your_');
   const isRealHolon = holonKey.startsWith('holon_') && !holonKey.includes('your_');
+
   return isRealDtp || isRealHolon;
 }
 
@@ -251,6 +258,8 @@ function normalizeHealthEvent(evt: HealthEvent): TwinEvent {
   };
 }
 
+// Pre-seeded events for demo patients. Fabry and Wilson start empty
+// so we can build them live on stage.
 const PATIENT_EVENTS: Record<string, TwinEvent[]> = {
   'patient-fabry': [],
   'patient-wilson': [],
@@ -277,6 +286,8 @@ const PATIENT_EVENTS: Record<string, TwinEvent[]> = {
     { id: 'evt-m09', timestamp: '2026-04-20T08:30:00Z', system: 'pulmonary', data: { code: 'J93.11', vocabulary: 'ICD-10', display: 'Collapsed lung (spontaneous pneumothorax)' } },
   ],
 };
+
+// Lookup tables for demo mode (used when no real HOLON API key is set)
 
 const MOCK_HPO_MAP: Record<string, PhenotypeMapping> = {
   'I42.1': { sourceCode: 'I42.1', sourceVocabulary: 'ICD-10', hpoId: 'HP:0001714', hpoLabel: 'Left ventricular hypertrophy', confidence: 0.92 },
@@ -318,13 +329,15 @@ const MOCK_REFERENCE_RANGES: Record<string, ReferenceRange> = {
   '1751-7': { loincCode: '1751-7', label: 'Albumin', low: 3.5, high: 5.0, unit: 'g/dL', source: 'HOLON' },
   '1742-6': { loincCode: '1742-6', label: 'ALT (SGPT)', low: 7, high: 56, unit: 'U/L', source: 'HOLON' },
   '17861-6': { loincCode: '17861-6', label: 'Calcium', low: 8.5, high: 10.5, unit: 'mg/dL', source: 'HOLON' },
-  '2498-4': { loincCode: '2498-4', label: 'Iron (serum)', low: 60, high: 170, unit: 'µg/dL', source: 'HOLON' },
+  '2498-4': { loincCode: '2498-4', label: 'Iron (serum)', low: 60, high: 170, unit: 'ug/dL', source: 'HOLON' },
   '2276-4': { loincCode: '2276-4', label: 'Ferritin', low: 12, high: 300, unit: 'ng/mL', source: 'HOLON' },
   '1847-3': { loincCode: '1847-3', label: 'Amyloid A protein', low: 0, high: 6.4, unit: 'mg/L', source: 'HOLON' },
 };
 
-// ─── DTP Wrapper Class ─────────────────────────────────
-
+/**
+ * Main DTP wrapper. Tries the real SDK if credentials exist,
+ * otherwise falls back to hardcoded demo data.
+ */
 export class ConstellationDTP {
   private realDtp: RealDTP | null = null;
   private isReal: boolean;
@@ -343,9 +356,6 @@ export class ConstellationDTP {
         config.holonApiKey = import.meta.env.VITE_HOLON_KEY;
       }
       this.realDtp = new RealDTP(config);
-      console.log('[Constellation] Using real @ontomorph/dtp-sdk with HOLON integration');
-    } else {
-      console.log('[Constellation] No DTP API key found — using demo data');
     }
   }
 
@@ -390,7 +400,7 @@ export class ConstellationDTP {
           try {
             return await this.realDtp.holon.interactions.checkList(drugIds);
           } catch (err) {
-            console.warn('[HOLON] Interaction API fallback:', err);
+            console.warn('Interaction API fallback:', err);
           }
         }
         await sleep(100);
@@ -403,7 +413,7 @@ export class ConstellationDTP {
           try {
             return await this.realDtp.holon.phenotype.match(termsA, termsB);
           } catch (err) {
-            console.warn('[HOLON] Phenotype API fallback:', err);
+            console.warn('Phenotype API fallback:', err);
           }
         }
         await sleep(100);
@@ -412,7 +422,7 @@ export class ConstellationDTP {
     },
   };
 
-  // ─── Real SDK implementations ──────────────────────────
+  // Real SDK call wrappers
 
   private async _connectReal(grantToken: string): Promise<Twin> {
     const realTwin = this.realDtp!.twins.connect(grantToken);
@@ -424,11 +434,11 @@ export class ConstellationDTP {
       age: 0,
       sex: 'male',
       events: {
-        list: async (): Promise<TwinEvent[]> => {
+        list: async () => {
           const realEvents = await realTwin.events.list();
           return realEvents.map(normalizeHealthEvent);
         },
-        stream: (opts: Record<string, unknown>, callback: (event: TwinEvent) => void): StreamHandle => {
+        stream: (opts: Record<string, unknown>, callback: (event: TwinEvent) => void) => {
           const handle: RealStreamHandle = realTwin.events.stream(
             { system: opts.system as string | undefined, intervalMs: 5000 },
             (evt) => callback(normalizeHealthEvent(evt))
@@ -484,12 +494,12 @@ export class ConstellationDTP {
     }
   }
 
-  // ─── Interaction & Phenotype Fallbacks ─────────────────
+  // Mock interaction data for demo mode
 
   private _mockCheckList(drugIds: number[]): InteractionListResponse {
     const pairs: Array<{ drugA: number; drugB: number; interactions: InteractionEntry[] }> = [];
 
-    // Warfarin (1002) + Aspirin (1003) or Ibuprofen (1001)
+    // warfarin + aspirin/ibuprofen
     if (drugIds.includes(1002) && (drugIds.includes(1003) || drugIds.includes(1001))) {
       const otherId = drugIds.includes(1003) ? 1003 : 1001;
       const otherName = otherId === 1003 ? 'Aspirin' : 'Ibuprofen';
@@ -514,7 +524,7 @@ export class ConstellationDTP {
       });
     }
 
-    // Tacrolimus (1006) + Gentamicin (1005)
+    // tacrolimus + gentamicin
     if (drugIds.includes(1005) && drugIds.includes(1006)) {
       pairs.push({
         drugA: 1005,
@@ -537,11 +547,7 @@ export class ConstellationDTP {
       });
     }
 
-    return {
-      totalDrugs: drugIds.length,
-      totalInteractions: pairs.length,
-      pairs,
-    };
+    return { totalDrugs: drugIds.length, totalInteractions: pairs.length, pairs };
   }
 
   private _mockPhenotypeMatch(termsA: number[], termsB: number[]): PhenotypeMatchResponse {
@@ -572,7 +578,7 @@ export class ConstellationDTP {
     };
   }
 
-  // ─── Demo Mode Implementation ──────────────────────────
+  // Demo mode: returns a fake twin from our hardcoded patient profiles
 
   private async _connectDemo(patientId: string): Promise<Twin> {
     await sleep(400);
@@ -595,8 +601,8 @@ export class ConstellationDTP {
           return { stop: () => clearInterval(interval) };
         },
       },
-      flag: async (scope, data) => {
-        console.log(`[DTP Flag] system=${scope}:`, data);
+      flag: async () => {
+        // no-op in demo mode
       },
     };
   }

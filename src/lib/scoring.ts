@@ -1,13 +1,10 @@
 /**
  * Phenotype overlap scoring.
  *
- * One-sentence explanation:
- * "Score = the fraction of this condition's known phenotype markers
- *  that we found in the patient's twin data, weighted by how
- *  frequently each phenotype is seen in confirmed cases."
- *
- * This is a weighted variant of set overlap — simple enough to narrate
- * live on stage, transparent enough for a skeptical clinician.
+ * Score = fraction of a condition's known phenotype markers that appear
+ * in the patient's twin data, weighted by how often each phenotype is
+ * seen in confirmed cases. Simple enough to explain on stage, transparent
+ * enough for a clinician to trust.
  */
 
 import type { CandidateCondition } from './candidates';
@@ -27,17 +24,13 @@ export type PhenotypeMatch = {
 
 export type ScoredCondition = {
   condition: CandidateCondition;
-  score: number;                       // 0–1
-  matchedFindings: PhenotypeMatch[];   // which patient phenotypes matched
-  unmatchedExpected: string[];         // condition phenotypes NOT found in patient
+  score: number;                       // 0-1
+  matchedFindings: PhenotypeMatch[];
+  unmatchedExpected: string[];         // condition phenotypes not found in patient
   novelFindings: PhenotypeMatch[];     // patient phenotypes not in condition profile
-  systemCoverage: Record<string, number>; // % match per body system
+  systemCoverage: Record<string, number>;
 };
 
-/**
- * Score how well a patient's resolved phenotype set overlaps with
- * a candidate condition's known profile.
- */
 export function scorePhenotypeOverlap(
   patientPhenotypes: PhenotypeMatch[],
   condition: CandidateCondition
@@ -45,7 +38,6 @@ export function scorePhenotypeOverlap(
   const patientHpoIds = new Set(patientPhenotypes.map((p) => p.hpoId));
   const conditionHpoIds = new Set(condition.phenotypeProfile.map((p) => p.hpoId));
 
-  // Weighted numerator: sum of weights for matched phenotypes
   let weightedMatched = 0;
   let weightedTotal = 0;
   const matchedFindings: PhenotypeMatch[] = [];
@@ -58,49 +50,31 @@ export function scorePhenotypeOverlap(
     if (patientHpoIds.has(phenotype.hpoId)) {
       weightedMatched += weight;
       const patientMatch = patientPhenotypes.find((p) => p.hpoId === phenotype.hpoId);
-      if (patientMatch) {
-        matchedFindings.push(patientMatch);
-      }
+      if (patientMatch) matchedFindings.push(patientMatch);
     } else {
       unmatchedExpected.push(phenotype.hpoId);
     }
   }
 
-  // Novel findings: patient phenotypes not in condition profile
   const novelFindings = patientPhenotypes.filter((p) => !conditionHpoIds.has(p.hpoId));
-
-  // Score: weighted overlap fraction
   const score = weightedTotal > 0 ? weightedMatched / weightedTotal : 0;
 
-  // System coverage: how many of the condition's systems have at least one match
+  // per-system coverage: does the patient have at least one hit in each system?
   const systemCoverage: Record<string, number> = {};
   for (const system of condition.systems) {
     const systemFindings = matchedFindings.filter((f) => f.system === system);
     const expectedInSystem = condition.phenotypeProfile.filter((p) => {
-      // check if this phenotype maps to this system
       const match = patientPhenotypes.find((pp) => pp.hpoId === p.hpoId);
       return match?.system === system;
     });
     systemCoverage[system] = expectedInSystem.length > 0 ? 1 : 0;
-    // Also count partial coverage
-    if (systemFindings.length > 0) {
-      systemCoverage[system] = 1;
-    }
+    if (systemFindings.length > 0) systemCoverage[system] = 1;
   }
 
-  return {
-    condition,
-    score,
-    matchedFindings,
-    unmatchedExpected,
-    novelFindings,
-    systemCoverage,
-  };
+  return { condition, score, matchedFindings, unmatchedExpected, novelFindings, systemCoverage };
 }
 
-/**
- * Score all candidates and return sorted by score descending.
- */
+/** Score all candidates and sort by match strength (descending). */
 export function scoreAllCandidates(
   patientPhenotypes: PhenotypeMatch[],
   candidates: CandidateCondition[]

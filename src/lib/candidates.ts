@@ -1,15 +1,6 @@
-/**
- * Bounded candidate condition list — 6 real multi-system conditions
- * with verified HPO phenotype profiles and LOINC monitoring codes.
- *
- * Sources:
- * - HPO terms: https://hpo.jax.org (Human Phenotype Ontology)
- * - Disease associations: Orphanet, OMIM
- * - LOINC codes: https://loinc.org
- *
- * Every association here is genuine and citable.
- * Do NOT add speculative or fabricated phenotype links.
- */
+// 6 curated multi-system conditions with verified HPO phenotype profiles.
+// HPO terms from hpo.jax.org, disease IDs from Orphanet/OMIM, LOINC codes from loinc.org.
+// Keep this list small and clinically accurate -- don't add unverified associations.
 
 export type CandidateCondition = {
   id: string;

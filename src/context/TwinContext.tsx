@@ -4,33 +4,25 @@ import { CANDIDATE_CONDITIONS } from '../lib/candidates';
 import { scoreAllCandidates, type ScoredCondition, type PhenotypeMatch } from '../lib/scoring';
 import { getBodySystem } from '../lib/bodySystem';
 
-// ─── Types ─────────────────────────────────────────────
-
 export type SystemEvent = TwinEvent & {
   hpoMapping?: PhenotypeMapping | null;
 };
 
 type TwinState = {
-  // Connection
   isConnecting: boolean;
   isConnected: boolean;
   twin: Twin | null;
   connectionError: string | null;
 
-  // Events
   events: SystemEvent[];
   eventsBySystem: Record<string, SystemEvent[]>;
 
-  // Analysis
   isAnalyzing: boolean;
   phenotypeMatches: PhenotypeMatch[];
   differentialResults: ScoredCondition[];
   analysisComplete: boolean;
-
-  // Live stream (stretch)
   isStreaming: boolean;
 
-  // Actions
   connect: (grantToken: string) => Promise<void>;
   addFinding: (finding: {
     display: string;
@@ -48,8 +40,6 @@ type TwinState = {
 };
 
 const TwinContext = createContext<TwinState | null>(null);
-
-// ─── Provider ──────────────────────────────────────────
 
 export function TwinProvider({ children }: { children: React.ReactNode }) {
   const dtp = useRef(createDTP());
@@ -85,10 +75,9 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
       const connectedTwin = await dtp.current.twins.connect(grantToken);
       setTwin(connectedTwin);
 
-      // Pull events across every system
       const rawEvents = await connectedTwin.events.list();
 
-      // Resolve HPO mappings for coded events
+      // resolve HPO mappings for each coded event
       const enrichedEvents: SystemEvent[] = await Promise.all(
         rawEvents.map(async (evt) => {
           let hpoMapping: PhenotypeMapping | null = null;
@@ -119,10 +108,9 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
     setIsAnalyzing(true);
     setAnalysisComplete(false);
 
-    // Small delay for animation orchestration
+    // brief delay for the loading animation
     await new Promise((r) => setTimeout(r, 400));
 
-    // Build phenotype match set from resolved events
     const matches: PhenotypeMatch[] = events
       .filter((evt) => evt.hpoMapping)
       .map((evt) => ({
@@ -134,11 +122,10 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
 
     setPhenotypeMatches(matches);
 
-    // Score against candidate conditions
     const scored = scoreAllCandidates(matches, CANDIDATE_CONDITIONS);
     setDifferentialResults(scored);
 
-    // Animation delay before revealing results
+    // let the animation play out before showing results
     await new Promise((r) => setTimeout(r, 800));
     setIsAnalyzing(false);
     setAnalysisComplete(true);
@@ -188,6 +175,7 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
         hpoMapping,
       };
 
+      // try to flag the real twin if connected
       if (twin) {
         try {
           await twin.flag(assignedSystem, {
@@ -196,8 +184,8 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
             code: finding.code || 'CUSTOM',
             vocabulary: finding.vocabulary || 'CLINICAL',
           });
-        } catch (err) {
-          console.warn('[DTP Flag] Grant scope check:', err);
+        } catch {
+          // grant scope might not allow flagging, that's ok
         }
       }
 
@@ -205,6 +193,7 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
         const next = [newEvent, ...prev];
         setEventsBySystem(groupBySystem(next));
 
+        // if we've already run analysis, re-score with the new finding
         if (analysisComplete) {
           const matches: PhenotypeMatch[] = next
             .filter((evt) => evt.hpoMapping)
