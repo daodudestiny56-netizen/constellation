@@ -233,13 +233,16 @@ function hasRealCredentials(): boolean {
   const dtpKey = import.meta.env.VITE_DTP_KEY || '';
   const holonKey = import.meta.env.VITE_HOLON_KEY || '';
   const holonUrl = import.meta.env.VITE_HOLON_API_URL || '';
+  const dtpUrl = import.meta.env.VITE_DTP_API_URL || '';
 
   const isRealDtp =
     (dtpKey.startsWith('dtp_live_') || dtpKey.startsWith('dtp_test_')) &&
     !dtpKey.includes('demo_key') &&
     !dtpKey.includes('your_');
   const isRealHolon = holonKey.startsWith('holon_') && !holonKey.includes('your_');
-  const isProxyConfigured = holonUrl.includes('/api/holon') || holonUrl.startsWith('/');
+  const isProxyConfigured =
+    holonUrl.includes('/api/holon') || holonUrl.startsWith('/') ||
+    dtpUrl.includes('/api/dtp') || dtpUrl.startsWith('/');
 
   return isRealDtp || isRealHolon || isProxyConfigured;
 }
@@ -351,6 +354,11 @@ export class ConstellationDTP {
       const config: DTPConfig = {
         apiKey: import.meta.env.VITE_DTP_KEY || 'dtp_proxy_key',
       };
+      if (import.meta.env.VITE_DTP_API_URL) {
+        config.baseUrl = import.meta.env.VITE_DTP_API_URL;
+      } else {
+        config.baseUrl = '/api/dtp';
+      }
       if (import.meta.env.VITE_HOLON_API_URL) {
         config.holonApiUrl = import.meta.env.VITE_HOLON_API_URL;
       } else {
