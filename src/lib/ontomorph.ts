@@ -226,10 +226,20 @@ export const DEMO_PATIENTS: DemoPatient[] = [
 ];
 
 const CUSTOM_PATIENTS_STORAGE_KEY = 'constellation_custom_patients';
+const DELETED_PATIENTS_STORAGE_KEY = 'constellation_deleted_patients';
 
 export function getCustomPatients(): DemoPatient[] {
   try {
     const raw = localStorage.getItem(CUSTOM_PATIENTS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function getDeletedPatientIds(): string[] {
+  try {
+    const raw = localStorage.getItem(DELETED_PATIENTS_STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -246,8 +256,28 @@ export function saveCustomPatient(patient: DemoPatient): void {
   }
 }
 
+export function deletePatient(patientId: string): void {
+  const custom = getCustomPatients().filter((p) => p.id !== patientId);
+  try {
+    localStorage.setItem(CUSTOM_PATIENTS_STORAGE_KEY, JSON.stringify(custom));
+  } catch {
+    // ignore
+  }
+
+  const deleted = getDeletedPatientIds();
+  if (!deleted.includes(patientId)) {
+    try {
+      localStorage.setItem(DELETED_PATIENTS_STORAGE_KEY, JSON.stringify([...deleted, patientId]));
+    } catch {
+      // ignore
+    }
+  }
+}
+
 export function getAllPatients(): DemoPatient[] {
-  return [...getCustomPatients(), ...DEMO_PATIENTS];
+  const deletedIds = new Set(getDeletedPatientIds());
+  const all = [...getCustomPatients(), ...DEMO_PATIENTS];
+  return all.filter((p) => !deletedIds.has(p.id));
 }
 
 function sleep(ms: number): Promise<void> {
