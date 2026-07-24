@@ -3,6 +3,8 @@
 **Cross-System Clinical Decision-Support for Digital Twins**  
 *Built for the Ontomorph Hackathon.*
 
+🌐 **Live App**: [https://constellation-sand.vercel.app](https://constellation-sand.vercel.app)
+
 Constellation reads a patient's digital twin across every body system simultaneously, maps multi-organ clinical observations to Human Phenotype Ontology (HPO) terms via the **HOLON Clinical Knowledge API**, scores cross-system patterns against rare/atypical condition profiles, and presents clinicians with an explainable differential diagnosis paired with live-monitored confirmation plans.
 
 ---
