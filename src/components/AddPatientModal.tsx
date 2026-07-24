@@ -116,7 +116,7 @@ export function AddPatientModal({ isOpen, onClose, onAddPatient }: Props) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Elena Rostova, Marcus Vance..."
-                className="w-full min-h-[44px] px-4 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-xs sm:text-sm placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+                className="w-full min-h-[44px] px-4 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-sm sm:text-base placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
               />
             </div>
 
@@ -130,7 +130,7 @@ export function AddPatientModal({ isOpen, onClose, onAddPatient }: Props) {
                   max="120"
                   value={age}
                   onChange={(e) => setAge(e.target.value ? parseInt(e.target.value, 10) : '')}
-                  className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-xs font-mono focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+                  className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-sm font-mono focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
                 />
               </div>
 
@@ -139,7 +139,7 @@ export function AddPatientModal({ isOpen, onClose, onAddPatient }: Props) {
                 <select
                   value={sex}
                   onChange={(e) => setSex(e.target.value as 'male' | 'female')}
-                  className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-xs font-medium focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+                  className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-sm font-medium focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
                 >
                   <option value="female">Female</option>
                   <option value="male">Male</option>
@@ -157,7 +157,7 @@ export function AddPatientModal({ isOpen, onClose, onAddPatient }: Props) {
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
                 placeholder="Brief clinical description (e.g. Recurrent joint stiffness, butterfly skin rash, and elevated proteinuria)..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-xs placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors resize-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-sm placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors resize-none"
               />
             </div>
 
@@ -171,7 +171,7 @@ export function AddPatientModal({ isOpen, onClose, onAddPatient }: Props) {
                 value={expectedMatch}
                 onChange={(e) => setExpectedMatch(e.target.value)}
                 placeholder="e.g. Autoimmune, Storage Disorder, Connective Tissue..."
-                className="w-full min-h-[44px] px-4 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-xs placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+                className="w-full min-h-[44px] px-4 py-2.5 rounded-xl bg-surface-raised border border-hairline text-text-primary text-sm sm:text-base placeholder:text-text-muted/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
               />
             </div>
 
