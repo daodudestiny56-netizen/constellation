@@ -14,8 +14,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     if (apiKey) {
-      headers['Authorization'] = `Bearer ${apiKey}`;
+      headers['X-DTP-API-Key'] = apiKey;
       headers['x-api-key'] = apiKey;
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    }
+
+    if (req.headers['authorization']) {
+      headers['Authorization'] = req.headers['authorization'] as string;
     }
 
     const fetchOptions: RequestInit = {
@@ -32,6 +37,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(apiRes.status).json(data);
   } catch (error) {
-    return res.status(500).json({ error: 'Proxy request failed', details: String(error) });
+    return res.status(500).json({ error: 'HOLON proxy request failed', details: String(error) });
   }
 }
