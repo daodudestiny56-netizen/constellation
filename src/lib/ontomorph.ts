@@ -232,14 +232,16 @@ function sleep(ms: number): Promise<void> {
 function hasRealCredentials(): boolean {
   const dtpKey = import.meta.env.VITE_DTP_KEY || '';
   const holonKey = import.meta.env.VITE_HOLON_KEY || '';
+  const holonUrl = import.meta.env.VITE_HOLON_API_URL || '';
 
   const isRealDtp =
     (dtpKey.startsWith('dtp_live_') || dtpKey.startsWith('dtp_test_')) &&
     !dtpKey.includes('demo_key') &&
     !dtpKey.includes('your_');
   const isRealHolon = holonKey.startsWith('holon_') && !holonKey.includes('your_');
+  const isProxyConfigured = holonUrl.includes('/api/holon') || holonUrl.startsWith('/');
 
-  return isRealDtp || isRealHolon;
+  return isRealDtp || isRealHolon || isProxyConfigured;
 }
 
 function normalizeHealthEvent(evt: HealthEvent): TwinEvent {
@@ -347,13 +349,17 @@ export class ConstellationDTP {
 
     if (this.isReal) {
       const config: DTPConfig = {
-        apiKey: import.meta.env.VITE_DTP_KEY,
+        apiKey: import.meta.env.VITE_DTP_KEY || 'dtp_proxy_key',
       };
       if (import.meta.env.VITE_HOLON_API_URL) {
         config.holonApiUrl = import.meta.env.VITE_HOLON_API_URL;
+      } else {
+        config.holonApiUrl = '/api/holon';
       }
       if (import.meta.env.VITE_HOLON_KEY) {
         config.holonApiKey = import.meta.env.VITE_HOLON_KEY;
+      } else {
+        config.holonApiKey = 'proxy_key';
       }
       this.realDtp = new RealDTP(config);
     }
