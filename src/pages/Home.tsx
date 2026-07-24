@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useTwin, type SystemEvent } from '../context/TwinContext';
+import { useTwin } from '../context/TwinContext';
 import { SystemLanes } from '../components/SystemLanes';
 import { LogFindingModal } from '../components/LogFindingModal';
-import { DEMO_PATIENTS, type DemoPatient } from '../lib/ontomorph';
+import { AddPatientModal } from '../components/AddPatientModal';
+import { type DemoPatient, getAllPatients, saveCustomPatient } from '../lib/ontomorph';
 
 type Props = {
   onNavigate: (route: string) => void;
@@ -16,9 +17,11 @@ export function Home({ onNavigate }: Props) {
     connect, addFinding, runConstellation, reset,
   } = useTwin();
 
+  const [patients, setPatients] = useState<DemoPatient[]>(() => getAllPatients());
   const [customToken, setCustomToken] = useState('');
   const [showCustomToken, setShowCustomToken] = useState(false);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [isAddPatientOpen, setIsAddPatientOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'system' | 'date'>('system');
 
   const sortedEvents = [...events].sort(
@@ -27,6 +30,12 @@ export function Home({ onNavigate }: Props) {
 
   const handleSelectPatient = async (patientId: string) => {
     await connect(patientId);
+  };
+
+  const handleAddPatient = async (newPatient: DemoPatient) => {
+    saveCustomPatient(newPatient);
+    setPatients(getAllPatients());
+    await connect(newPatient.id);
   };
 
   const handleCustomConnect = async (e: React.FormEvent) => {
@@ -68,21 +77,35 @@ export function Home({ onNavigate }: Props) {
               Constellation
             </h2>
             <p className="text-text-muted text-xs sm:text-sm leading-relaxed">
-              Cross-system clinical intelligence. Select a patient dashboard to uncover hidden patterns spanning separate body systems.
+              Cross-system clinical intelligence. Select a patient dashboard or register a new twin to uncover hidden patterns spanning separate body systems.
             </p>
           </div>
 
-          {/* Demo Patient Dashboards */}
+          {/* Patient Dashboards */}
           <div className="space-y-3.5">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <h3 className="font-display font-semibold text-sm sm:text-base text-text-primary">
                 Select Patient Dashboard
               </h3>
-              <span className="text-[11px] sm:text-xs text-text-muted">4 Case Studies</span>
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] sm:text-xs text-text-muted hidden sm:inline">
+                  {patients.length} Patient Twins
+                </span>
+                <button
+                  onClick={() => setIsAddPatientOpen(true)}
+                  className="min-h-[40px] px-3.5 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all flex items-center gap-1.5 shadow-md shadow-signal/20 active:scale-95 cursor-pointer"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Add Patient
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
-              {DEMO_PATIENTS.map((patient: DemoPatient) => (
+              {patients.map((patient: DemoPatient) => (
                 <button
                   key={patient.id}
                   onClick={() => handleSelectPatient(patient.id)}
@@ -135,7 +158,7 @@ export function Home({ onNavigate }: Props) {
           <div className="pt-3 border-t border-hairline space-y-3">
             <button
               onClick={() => setShowCustomToken(!showCustomToken)}
-              className="min-h-[44px] flex items-center justify-center gap-2 text-xs text-text-muted hover:text-signal transition-colors mx-auto px-4"
+              className="min-h-[44px] flex items-center justify-center gap-2 text-xs text-text-muted hover:text-signal transition-colors mx-auto px-4 cursor-pointer"
             >
               <span>{showCustomToken ? '▲ Hide Live Grant Token Login' : '▼ Connect with Custom DTP Grant Token'}</span>
             </button>
@@ -200,7 +223,7 @@ export function Home({ onNavigate }: Props) {
             <div className="flex items-center justify-between sm:justify-end gap-2.5 pt-2 sm:pt-0 border-t sm:border-t-0 border-hairline/40">
               <button
                 onClick={() => setIsLogModalOpen(true)}
-                className="hidden sm:flex items-center gap-1.5 min-h-[44px] px-4 py-2 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all shadow-md shadow-signal/20 active:scale-95"
+                className="hidden sm:flex items-center gap-1.5 min-h-[44px] px-4 py-2 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all shadow-md shadow-signal/20 active:scale-95 cursor-pointer"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <line x1="12" y1="5" x2="12" y2="19" />
@@ -211,7 +234,7 @@ export function Home({ onNavigate }: Props) {
 
               <button
                 onClick={reset}
-                className="min-h-[44px] px-3.5 py-2 rounded-xl bg-surface-raised border border-hairline text-text-muted text-xs hover:text-text-primary hover:border-signal/50 transition-colors active:scale-95"
+                className="min-h-[44px] px-3.5 py-2 rounded-xl bg-surface-raised border border-hairline text-text-muted text-xs hover:text-text-primary hover:border-signal/50 transition-colors active:scale-95 cursor-pointer"
               >
                 Switch Patient
               </button>
@@ -259,7 +282,7 @@ export function Home({ onNavigate }: Props) {
               </div>
               <button
                 onClick={() => setIsLogModalOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all shadow-md shadow-signal/20 active:scale-95"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal text-ink font-semibold text-xs hover:bg-signal/90 transition-all shadow-md shadow-signal/20 active:scale-95 cursor-pointer"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <line x1="12" y1="5" x2="12" y2="19" />
@@ -279,7 +302,7 @@ export function Home({ onNavigate }: Props) {
                 Chronological Finding Log (Most Recent First)
               </h3>
               <div className="space-y-2.5">
-                {sortedEvents.map((evt: SystemEvent) => (
+                {sortedEvents.map((evt) => (
                   <div
                     key={evt.id}
                     className="p-3.5 rounded-xl bg-surface-raised border border-hairline/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
@@ -321,7 +344,7 @@ export function Home({ onNavigate }: Props) {
             <button
               onClick={handleRunConstellation}
               disabled={isAnalyzing || events.length === 0}
-              className="w-full sm:w-auto group relative px-6 sm:px-8 min-h-[52px] py-3.5 rounded-2xl bg-signal text-ink font-display font-bold text-base sm:text-lg hover:bg-signal/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-signal/20 hover:shadow-signal/30 active:scale-95 flex items-center justify-center"
+              className="w-full sm:w-auto group relative px-6 sm:px-8 min-h-[52px] py-3.5 rounded-2xl bg-signal text-ink font-display font-bold text-base sm:text-lg hover:bg-signal/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-signal/20 hover:shadow-signal/30 active:scale-95 flex items-center justify-center cursor-pointer"
             >
               {isAnalyzing ? (
                 <span className="flex items-center gap-2.5">
@@ -362,7 +385,7 @@ export function Home({ onNavigate }: Props) {
           {/* Mobile Floating Action Button (FAB) for + Log Finding */}
           <button
             onClick={() => setIsLogModalOpen(true)}
-            className="sm:hidden fixed bottom-6 right-4 z-40 w-14 h-14 rounded-full bg-signal text-ink shadow-2xl shadow-signal/40 flex items-center justify-center active:scale-95 border-2 border-ink"
+            className="sm:hidden fixed bottom-6 right-4 z-40 w-14 h-14 rounded-full bg-signal text-ink shadow-2xl shadow-signal/40 flex items-center justify-center active:scale-95 border-2 border-ink cursor-pointer"
             aria-label="Log clinical finding"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
@@ -378,6 +401,13 @@ export function Home({ onNavigate }: Props) {
         isOpen={isLogModalOpen}
         onClose={() => setIsLogModalOpen(false)}
         onAddFinding={addFinding}
+      />
+
+      {/* Add Patient Modal */}
+      <AddPatientModal
+        isOpen={isAddPatientOpen}
+        onClose={() => setIsAddPatientOpen(false)}
+        onAddPatient={handleAddPatient}
       />
     </div>
   );

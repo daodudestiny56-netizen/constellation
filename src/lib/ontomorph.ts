@@ -225,6 +225,31 @@ export const DEMO_PATIENTS: DemoPatient[] = [
   },
 ];
 
+const CUSTOM_PATIENTS_STORAGE_KEY = 'constellation_custom_patients';
+
+export function getCustomPatients(): DemoPatient[] {
+  try {
+    const raw = localStorage.getItem(CUSTOM_PATIENTS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveCustomPatient(patient: DemoPatient): void {
+  const existing = getCustomPatients();
+  const updated = [patient, ...existing.filter((p) => p.id !== patient.id)];
+  try {
+    localStorage.setItem(CUSTOM_PATIENTS_STORAGE_KEY, JSON.stringify(updated));
+  } catch {
+    // ignore storage error
+  }
+}
+
+export function getAllPatients(): DemoPatient[] {
+  return [...getCustomPatients(), ...DEMO_PATIENTS];
+}
+
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
 }
@@ -597,7 +622,16 @@ export class ConstellationDTP {
   private async _connectDemo(patientId: string): Promise<Twin> {
     await sleep(400);
 
-    const profile = DEMO_PATIENTS.find((p) => p.id === patientId) || DEMO_PATIENTS[0];
+    const allPatients = getAllPatients();
+    const profile = allPatients.find((p) => p.id === patientId) || {
+      id: patientId,
+      name: 'Custom Patient',
+      age: 30,
+      sex: 'female' as const,
+      summary: 'Patient digital twin',
+      primarySystems: ['Cardiovascular'],
+      expectedTopMatch: 'Custom Patient Twin',
+    };
     const events = PATIENT_EVENTS[profile.id] || [];
 
     return {
