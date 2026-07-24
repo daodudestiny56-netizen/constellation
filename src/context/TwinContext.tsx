@@ -211,7 +211,7 @@ export function TwinProvider({ children }: { children: React.ReactNode }) {
         return next;
       });
     },
-    [analysisComplete]
+    [analysisComplete, twin]
   );
 
   const startStream = useCallback(() => {

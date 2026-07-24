@@ -27,7 +27,7 @@ export function LiveView({ onNavigate }: Props) {
     return () => {
       stopStream();
     };
-  }, []);
+  }, [isStreaming, startStream, stopStream]);
 
   useEffect(() => {
     if (events.length > lastEventCount) {
